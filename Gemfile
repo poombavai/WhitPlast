@@ -17,7 +17,8 @@ gem 'date_validator'
 gem 'whenever', :require => false
 gem 'seed_dump'
 #gem 'yaml_db'
-gem 'mysql2', '>= 0.3.13', '< 0.5'
+#gem 'mysql2', '>= 0.3.13', '< 0.5'
+gem 'pg'
 gem 'puma'
 #gem 'jquery-turbolinks'
 # Use sqlite3 as the database for Active Record
