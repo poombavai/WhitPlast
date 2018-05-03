@@ -8,3 +8,8 @@ default: &default
 development:
   <<: *default
   database: vpcvi-u2
+
+production:
+  <<: *default
+  database: vpcvi-u2
+
