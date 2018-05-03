@@ -1,0 +1,76 @@
+<div class = "bod">
+  <div class="col-md-10 col-sm-8 body-wrap">
+              <div class="body-container">
+                  <div class="body-header">
+                      Finished Goods Production Details
+<div class="add"><%= link_to users_report_finished_goods_path, class: "btn btn-default", :title => 'Back', :rel =>'tooltip' do%>
+<i class="fa fa-arrow-left"></i><%end%></div>
+
+<div class="body-content">
+                       <div class="table-container">
+      <table class="table">  
+
+
+  <thead>
+    <tr>
+    <th>Party</th>
+    <th>Issue Slip Number</th>
+    <th>Issue Date</th>
+    <th>Shift</th>
+    <th>Raw Material Issue</th>
+    <th>Color Issues</th>
+    <th>Finished Goods Name</th>
+    <th>Total No Of Items Produced</th>
+    <th>Total Weight Consumed</th>      
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @issue.each do |issue| %>
+      <tr>
+      <td><%= issue.party %></td>
+      <td><%= issue.issue_slip_no %></td>
+        <td><%= issue.issue_date %></td>
+        <td><%= issue.shift %></td>
+        <td><%= issue.rm_issues %></td>
+        <td><%= issue.chemicals %></td>
+        <td><%= issue.finished_goods_name %></td>
+        <td><%= issue.total_no_of_items_produced %></td>
+        <td><%= issue.total_weight_consumed %></td>
+        <% end %> </tr>
+  </tbody>
+</table>
+
+<table class="table" style="width:40%"><thead>
+<tr>
+<th>Finished Goods Name</th>
+<th>Total Weight Consumed</th>
+  </tr></thead>
+<tbody>
+<div style="color: black;font-size: 12px;padding: 10px;">
+  <% @value.each do |k,v|%>
+  <tr>
+    <td><%= k %></td><td><%= v.to_f.round(4) %></td></tr>
+  <% end %></tbody></table>
+
+<table class="table" style="width:40%"><thead>
+<tr>
+<th>Finished Goods Name</th>
+<th>Total No of Item Produced</th></tr></thead>
+<tbody>
+  <div style="color: black;font-size: 12px;padding: 10px;">
+  <% @value1.each do |i,j|%>
+     <td><%= i %></td><td><%= j.to_f.round(4) %></td></tr>
+  <% end %>
+
+  </tbody></table>
+</div>
+</div>
+</div>
+<!-- <style>
+#back
+{
+  color : red;
+}
+</style>
+ -->

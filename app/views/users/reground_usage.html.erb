@@ -1,0 +1,68 @@
+<div class = "bod">
+  <div class="col-md-10 col-sm-8 body-wrap">
+              <div class="body-container">
+                  <div class="body-header">
+                      Reground Usage Details From Issue Report
+<div class="add"><%= link_to users_report_reground_usage_path, class: "btn btn-default", :title => 'Back', :rel =>'tooltip' do%>
+<i class="fa fa-arrow-left"></i><%end%></div>
+
+<div class="body-content">
+                       <div class="table-container">
+      <table class="table">  
+
+
+  <thead>
+    <tr>
+    <th>Issues Slip No</th>
+      <th>Issue Date</th>
+      <th>Shift</th>
+      <th>Color Issues</th>
+      <th>Rg Material Issues</th>
+      <th>Rg Qty</th>
+      
+      
+
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @issue.each do |issue| %>
+      <tr>
+      <td><%= issue.issue_slip_no %></td>
+        <td><%= issue.issue_date %></td>
+        <td><%= issue.shift %></td>
+        <td><%= issue.chemicals %></td>
+        <td><%= issue.rg_material_issues %></td>
+        <td><%= issue.rg_qty %></td>
+        
+        
+        
+                <% end %> </tr>
+  </tbody>
+</table>
+
+<table class="table" style="width:40%"><thead>
+<tr>
+<th>RE Ground Material Issues</th>
+<th>RG Quantity</th></tr></thead>
+<tbody>
+<div style="color: black;font-size: 12px;padding: 10px;">
+  <% @value.each do |k,v|%>
+  <tr>
+    <td><%= k %></td><td><%= v.to_f.round(4) %></td></tr>
+  <% end %></tbody></table>
+</div>
+</div>
+</div>
+
+
+
+<!-- <style>
+#back
+{
+  color : red;
+}
+</style>
+ -->
+
+ 

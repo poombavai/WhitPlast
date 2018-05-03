@@ -1,0 +1,190 @@
+<div class = "bod">
+  <div class="col-md-10 col-sm-8 body-wrap">
+              <div class="body-container">
+                  <div class="body-header">
+                      Issue Report
+<div class="add"><%= link_to users_report_issues_path, class: "btn btn-default", :title => 'Back', :rel =>'tooltip' do%>
+<i class="fa fa-arrow-left"></i><%end%></div>
+
+                    <%if admin? and not @issue.blank?%>
+<div class="down"><%= link_to users_issue_report_path(format: "xls"),:class=>"btn btn-info btn-sm" do%>
+<i class="fa fa-arrow-circle-down">Download</i><%end%></div><br>
+<%end%></div>
+                    <div class="body-content">
+                       <div class="table-container">
+
+
+
+<table class="table">                        
+ <thead>
+ <tr>                             
+<th>Sl.No</th>
+<%$ishd.each do|i|%>
+<th><%=i%></th>
+<%end%>
+</tr>
+</thead>
+<% if @issue.blank? then %>
+<table><th>No records to display</th></table>
+
+<% else %>
+<tbody>
+<%t=1%>
+<%@issue.each do|k|%>
+<tr class="odd">
+<td><%= t %></td>
+<%$isfd.each do|i|%>
+<td><%= @issue.where(:id=>k.id).maximum(i.to_sym) %> </td>
+<%end%>
+</tbody>
+
+<%t=t+1%>
+</tr>
+<% end %>
+
+<% if $isfd.include?"rg_qty" then %>
+<tr></tr>
+<% rg=[] %>
+	<% @issue.each{|i| rg<<i.rg_qty.to_f} %>
+<tr>
+<th colspan ="3">Total RG Qty (in kgs) = </th><th><%= rg.sum.round(3) %></th>
+</tr>
+<% end %>
+
+
+<% if $isfd.include?"rg_qty_return" then %>
+  <% rg_ret=[] %>
+	<% @issue.each{|i| rg_ret<<i.rg_qty_return.to_f} %>
+<tr><th colspan ="3">Total Reground Qty return (in kgs) = </th><th><%= rg_ret.sum.round(3) %></th></tr>
+<% end %>
+
+
+<% if $isfd.include?"rg_consume" then %>
+  <% rg_generated=[] %>
+	<% @issue.each{|i| rg_generated<<i.rg_consume.to_f} %>
+<tr><th colspan ="3">Total RG generated (in kgs) = </th><th><%= rg_generated.sum.round(3) %></th></tr>
+<% end %>
+
+
+<% if $isfd.include?"rm_qty"and$isfd.include?"rm_issues" then %>
+      <% rm=[] %>
+      <% rm_iss=[] %>
+<% rm_iss=@issue.pluck(:rm_issues).uniq %>
+<% rm_iss.each {|i| rm << @issue.where(:rm_issues=>i).pluck(:rm_qty)} %>
+<% carry=[] %>
+<% rm.each {|i| carry<<i.map{|j| j.to_f} } %>
+<%g=0%>
+<tr><th colspan ="2">RM issue (in kgs)</th><th colspan ="2">Total RM Qty </th></tr>
+<% rm_iss.each do |i| %>
+  <tr><td colspan ="2"><%= i.to_sym %></td><td><%= carry[g].sum.round(3) %></td></tr>
+  <%g=g+1 %>
+<% end %>
+<% end %>
+
+
+<% if $isfd.include?"chem_qty"and$isfd.include?"chemicals_type" then %>
+  <% chem_qty=[] %>
+  <% chem_type=[] %>
+  <% coun=[] %>
+  <% chem_type = @issue.pluck(:chemicals_type).uniq %>
+  <% chem_type.each {|i| chem_qty << @issue.where(:chemicals_type=>i).pluck(:che_qty)} %>
+  <% chem_qty.each{|i| coun<<i.map{|j| j.to_f} } %>
+  <%g=0%>
+    <tr><th colspan ="2">Coloring Agent type </th><th colspan ="2">Total Coloring agent qty</th></tr>
+    <% chem_type.each do |i| %>
+      <tr><td colspan ="2">"<%= i.to_sym %>"</td><td colspan="2"><%= coun[g].sum.round(3) %></td></tr>
+      <% g=g+1 %>
+    <% end %>
+    <tr><th colspan ="2">Total (in kgs) = </th>
+    <th><%= coun.flatten.sum.round(3) %></th></tr>
+<% end %>
+
+<% if $isfd.include?"chemicals"and$isfd.include?"chem_qty"then %>
+<% chemi=[] %>
+<% che_qt=[] %>
+<% tot=[] %>
+<% chemi<<@issue.pluck(:chemicals).uniq.flatten %>
+<% chemi=chemi.flatten %>
+<% chemi.each {|p| che_qt << @issue.where(:chemicals=>p).pluck(:chem_qty) } %>
+<% che_qt.each{|i| tot<<i.map{|j| j.to_f} } %>
+<%g=0%>
+  <tr><th colspan ="3">Color issue</th><th colspan = "2">Total Coloring agent qty</th></tr>
+  <% chemi.each do |i| %>
+    <tr><td colspan ="3">"<%= i.to_sym %>"</td><td colspan ="2"><%= tot[g].sum.round(3) %></td></tr>
+    <% g=g+1 %>
+  <% end %>
+<% end %>
+
+
+<% if $isfd.include?"rm_issues"and$isfd.include?"chemicals"and$isfd.include?"rg_qty" %>
+<% rm_issu=[] %>
+<% che=[] %>
+<% rg_qt=[] %>
+<% tem=[] %>
+<% tem1=[] %>
+<% tt=[] %>
+<% rm_issu<<@issue.pluck(:rm_issues).uniq %>
+<% rm_issu.flatten.each do |i| %>
+<% che << @issue.where(:rm_issues=>i).pluck(:chemicals).uniq %>
+<% che.flatten.each do |j| %>
+<% tem<<@issue.where(:rm_issues=>i).where(:chemicals=>j).pluck(:rg_qty) %>
+<% tem1<<tem.flatten.map{|i| i.to_f} %>
+<% rg_qt<<[i,j,tem1.flatten.sum.round(3)] %>
+<% tem1.clear %>
+<% tem.clear %>
+<% che.clear %>
+<% end %>
+<% end %>
+  <tr><th colspan ="2">RM issue</th><th colspan ="2">Color Issue</th><th colspan="2">Total RG Qty</th></tr>
+  <% rg_qt.each do |i| %>
+    <tr><td colspan ="2">"<%= i[0].to_sym %>"</td><td colspan ="2"><%= i[1].to_sym %></td>
+      <td colspan="2"><%= i[2] %></td></tr>
+  <% end %>
+<% end %>
+
+
+
+<%end%>
+</table>
+</div>
+</div>
+</div>
+
+
+
+
+<% if false %>
+
+      <table class="table">                        
+ <thead>
+ <tr>                             
+<th>Sl.No</th>
+<%$ishd.each do|i|%>
+<th><%=i%></th>
+<%end%>
+</tr>
+</thead>
+<% if @issue.blank? then %>
+<table><th>No records to display</th></table>
+
+<% else %>
+<tbody>
+<%t=1%>
+<%@issue.each do|k|%>
+<tr class="odd">
+<td>  <%= t %></td>
+<%$isfd.each do|i|%>
+<td>  <%= @issue.where(:id=>k.id).maximum(i.to_sym)%></td>
+<%end%>
+</tbody>
+<%t=t+1%>
+</tr>
+<% end %>
+<%end%>
+</table>
+</div>
+</div>
+</div>
+
+<% end %>
+

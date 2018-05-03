@@ -1,0 +1,67 @@
+<div class = "bod">
+  <div class="col-md-10 col-sm-8 body-wrap">
+              <div class="body-container">
+                  <div class="body-header">
+                      Coloring Agent Usage Report
+<div class="add"><%= link_to users_color_agent_issue_path, class: "btn btn-default", :title => 'Back', :rel =>'tooltip' do%>
+<i class="fa fa-arrow-left"></i><%end%></div>
+
+<div class="body-content">
+                       <div class="table-container">
+      <table class="table">  
+
+
+  <thead>
+    <tr>
+      <th>Issue Slip No</th>
+      <th>Issue Date</th>
+      <th>Shift</th>
+      <th>Coloring Agent Type</th>
+      <th>Color Issues</th> 
+      
+      <th>Coloring Agent Qty</th>
+
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @issue.each do |issue| %>
+      <tr>
+      <td><%= issue.issue_slip_no %></td>
+        <td><%= issue.issue_date %></td>
+        <td><%= issue.shift %></td>
+        <td><%= issue.chemicals_type %></td>
+        <td><%= issue.chemicals %></td>       
+        <td><%= issue.che_qty %></td>
+        
+                <% end %> </tr>
+  </tbody>
+</table>
+<table class="table" style="width:40%"><thead>
+<tr>
+<th>Color Issues</th>
+<th>Coloring Agent Qty</th></tr></thead>
+<tbody>
+<div style="color: black;font-size: 12px;padding: 10px;">
+  <% @value.each do |k,v|%>
+  <tr>
+    <td><%= k %></td><td><%= v.to_f.round(4) %></td></tr>
+  <% end %></tbody></table>
+</div>
+
+
+
+</div>
+
+</div>
+</div>
+
+
+
+<!-- <style>
+#back
+{
+  color : red;
+}
+</style>
+ -->

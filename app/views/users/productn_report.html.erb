@@ -1,0 +1,131 @@
+<div class = "bod">
+  <div class="col-md-10 col-sm-8 body-wrap">
+              <div class="body-container">
+                  <div class="body-header">
+                      Production Report : <%= @prod.count %>
+<div class="add"><%= link_to users_report_production_path, class: "btn btn-default", :title => 'Back', :rel =>'tooltip' do%>
+<i class="fa fa-arrow-left"></i><%end%></div>
+
+                    <%if admin? and not @prod.blank?%>
+<div class="down"><%= link_to users_product_report_path(format: "xls"),:class=>"btn btn-info btn-sm" do%>
+<i class="fa fa-arrow-circle-down">Download</i><%end%></div><br>
+<%end%></div>
+
+
+
+
+<div class="body-content">
+                       <div class="table-container">
+
+<% tot_items=[] %>
+<% temp=[] %>
+<% mould=[] %>
+<% count=[] %>
+<% k=[] %>
+
+<table class="table">                        
+ <thead>
+ <tr>
+<th>Sl.No</th>                             	
+<%$prhd.map do|i|%>
+<th><%=i%></th>
+<%end%>
+</tr>
+</thead>
+
+<% if @prod.blank? then %>
+<table><th>No records to display</th></table>
+
+<% else %>
+<tbody>
+<%t=1%>
+
+<%@prod.map do|k|%>
+
+<%if k.is_a? ProductionReport%>
+<%@iss=k.issue_id%>
+<%elsif k.is_a? Labour%>
+<%@iss=k.issue_id%>
+<%else%>
+<%@iss=k.id%>
+<%end%>
+
+<%if @production_report.where(:issue_id=>@iss).any?%>
+
+<tr class="odd">
+<td> <%=t %></td>
+
+<%$prfd.map do|i|%>
+
+<!--% if Issue.column_names.include?(i)%-->
+<%if @issue.column_names.include?(i) %>
+<% tem = @issue.where(:id=>@iss).maximum(i.to_sym) %>
+<td><%= tem.nil? ? "--" : tem %></td>
+<%elsif @production_report.column_names.include?(i) %>
+<% tem1 = @production_report.where(:issue_id=> @iss).maximum(i.to_sym) %>
+<td><%= tem1.nil? ? "--" : tem1 %></td>
+<%else%>
+<% tem2 = @labour.where(:issue_id=> @iss).maximum(i.to_sym) %>
+<td><%= tem2.nil? ? "--" : tem2 %>
+<%end%>
+
+<%end%>
+
+<%end%>
+<% t=t+1%>
+
+<%end%>
+
+
+<% if $prfd.include?"total_no_of_items_produced" then %>
+<% temp = @production_report.pluck(:total_no_of_items_produced) %>
+<% temp.flatten %>
+<% temp.each {|i| tot_items<<i.to_i} %> 
+	<tr>
+	  <th colspan ="4">Total no of items produced (in Qty) = </th>
+      <th><%= tot_items.sum %></th>
+    </tr>
+<% end %>
+
+
+<% tempo=[] %>
+<% if $prfd.include?"mould"and"total_no_of_items_produced"then %>
+<% mould<<@labour.pluck(:mould) %>
+<% mould=mould.flatten.uniq %>
+<% mould.each do |p| %>
+<% k << @labour.where(:mould=>p).pluck(:total_no_of_items_produced) %>
+<% k=k.flatten %>
+<% if k.empty? %>
+<% tempo.push(0) %>
+<% else %>
+<% k.each{|i| tempo.push(i.to_f) } %>
+<% end %>
+<% tempo=tempo.flatten %>
+<% unless tempo.empty? %>
+  <% count<<tempo.sum %>
+  <% end %>
+<% tempo.clear%>
+<% k.clear%>
+<% end %>
+
+<%g=0%>
+<% mould.each do |i| %>
+<tr></tr>
+<tr>  
+<th colspan ="4">Total No.of items Produced for Mould "<%= i.to_sym %>" is </th>
+<th><%= count[g] %></th>
+<%g=g+1 %>
+</tr>
+<% end %>
+
+<% end %>
+
+
+
+</tbody>
+</table>
+<%end%>
+</div>
+</div>
+
+
